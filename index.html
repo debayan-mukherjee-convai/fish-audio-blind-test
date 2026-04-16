@@ -17,7 +17,7 @@
 
     header {
       max-width: 900px;
-      margin: 0 auto 40px;
+      margin: 0 auto 32px;
       text-align: center;
     }
     header h1 {
@@ -47,6 +47,42 @@
       letter-spacing: 0.5px;
     }
 
+    /* ── Participant name box ── */
+    .name-box {
+      max-width: 900px;
+      margin: 0 auto 32px;
+      background: #1e293b;
+      border: 1px solid #2d3748;
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .name-box label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    .name-box input {
+      flex: 1;
+      background: #0f1117;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #f1f5f9;
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .name-box input:focus {
+      border-color: #3b82f6;
+    }
+    .name-box input::placeholder {
+      color: #475569;
+    }
+
     .voice-grid {
       max-width: 900px;
       margin: 0 auto;
@@ -62,9 +98,7 @@
       padding: 22px 24px;
       transition: border-color 0.2s;
     }
-    .voice-card.voted {
-      border-color: #3b82f6;
-    }
+    .voice-card.voted { border-color: #3b82f6; }
 
     .voice-header {
       display: flex;
@@ -73,36 +107,23 @@
       margin-bottom: 18px;
     }
     .voice-number {
-      width: 28px;
-      height: 28px;
+      width: 28px; height: 28px;
       border-radius: 50%;
       background: #334155;
       color: #94a3b8;
       font-size: 0.75rem;
       font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
       margin-top: 2px;
     }
-    .voice-info h2 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: #f1f5f9;
-    }
-    .voice-text {
-      margin-top: 4px;
-      font-size: 0.82rem;
-      color: #64748b;
-      font-style: italic;
-      line-height: 1.5;
-    }
+    .voice-info h2 { font-size: 1rem; font-weight: 600; color: #f1f5f9; }
 
     .samples-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
+      position: relative;
     }
 
     .sample-block {
@@ -112,280 +133,158 @@
       padding: 16px;
       cursor: pointer;
       transition: border-color 0.15s, background 0.15s;
-      position: relative;
     }
-    .sample-block:hover {
-      border-color: #475569;
-      background: #131a26;
-    }
-    .sample-block.selected {
-      border-color: #3b82f6;
-      background: #0f1e3a;
-    }
+    .sample-block:hover  { border-color: #475569; background: #131a26; }
+    .sample-block.selected { border-color: #3b82f6; background: #0f1e3a; }
 
     .sample-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #64748b;
-      margin-bottom: 10px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: #64748b; margin-bottom: 10px;
     }
-    .sample-block.selected .sample-label {
-      color: #60a5fa;
-    }
+    .sample-block.selected .sample-label { color: #60a5fa; }
 
     audio {
-      width: 100%;
-      height: 36px;
-      outline: none;
-      border-radius: 6px;
+      width: 100%; height: 36px;
+      outline: none; border-radius: 6px;
     }
-    /* Webkit audio player dark tint */
-    audio::-webkit-media-controls-panel {
-      background-color: #1e293b;
-    }
+    audio::-webkit-media-controls-panel { background-color: #1e293b; }
 
     .vote-indicator {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      display: flex; align-items: center; gap: 6px;
       margin-top: 10px;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #3b82f6;
-      opacity: 0;
-      transition: opacity 0.2s;
+      font-size: 0.78rem; font-weight: 600; color: #3b82f6;
+      opacity: 0; transition: opacity 0.2s;
     }
-    .sample-block.selected .vote-indicator {
-      opacity: 1;
-    }
-    .vote-indicator svg {
-      flex-shrink: 0;
-    }
-
-    .divider {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #475569;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      align-self: center;
-      grid-column: auto;
-    }
-
-    /* override grid for OR divider */
-    .samples-row {
-      position: relative;
-    }
+    .sample-block.selected .vote-indicator { opacity: 1; }
+    .vote-indicator svg { flex-shrink: 0; }
 
     .progress-bar-wrap {
-      max-width: 900px;
-      margin: 0 auto 28px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
+      max-width: 900px; margin: 0 auto 28px;
+      display: flex; align-items: center; gap: 14px;
     }
     .progress-bar-bg {
-      flex: 1;
-      height: 6px;
-      background: #1e293b;
-      border-radius: 99px;
-      overflow: hidden;
+      flex: 1; height: 6px;
+      background: #1e293b; border-radius: 99px; overflow: hidden;
     }
     .progress-bar-fill {
       height: 100%;
       background: linear-gradient(90deg, #3b82f6, #818cf8);
-      border-radius: 99px;
-      transition: width 0.3s ease;
-      width: 0%;
+      border-radius: 99px; transition: width 0.3s ease; width: 0%;
     }
-    .progress-text {
-      font-size: 0.8rem;
-      color: #64748b;
-      white-space: nowrap;
-    }
+    .progress-text { font-size: 0.8rem; color: #64748b; white-space: nowrap; }
 
     .submit-wrap {
-      max-width: 900px;
-      margin: 32px auto 0;
-      text-align: center;
+      max-width: 900px; margin: 32px auto 0; text-align: center;
     }
     .submit-btn {
       padding: 14px 48px;
       background: linear-gradient(135deg, #3b82f6, #6366f1);
-      border: none;
-      border-radius: 10px;
-      color: #fff;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
+      border: none; border-radius: 10px;
+      color: #fff; font-size: 1rem; font-weight: 600;
+      cursor: pointer; transition: opacity 0.2s, transform 0.1s;
       letter-spacing: 0.2px;
+      display: inline-flex; align-items: center; gap: 10px;
     }
-    .submit-btn:disabled {
-      opacity: 0.4;
-      cursor: not-allowed;
+    .submit-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .submit-btn:not(:disabled):hover  { opacity: 0.9; }
+    .submit-btn:not(:disabled):active { transform: scale(0.98); }
+    .submit-note { margin-top: 10px; font-size: 0.8rem; color: #475569; }
+
+    /* Spinner */
+    .spinner {
+      width: 16px; height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
     }
-    .submit-btn:not(:disabled):hover {
-      opacity: 0.9;
+    .submit-btn.loading .spinner { display: block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Error toast ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: #dc2626; color: #fff;
+      padding: 10px 20px; border-radius: 8px;
+      font-size: 0.85rem; font-weight: 500;
+      opacity: 0; transition: opacity 0.3s;
+      pointer-events: none; z-index: 99;
+      white-space: nowrap;
     }
-    .submit-btn:not(:disabled):active {
-      transform: scale(0.98);
-    }
-    .submit-note {
-      margin-top: 10px;
-      font-size: 0.8rem;
-      color: #475569;
-    }
+    .toast.show { opacity: 1; }
 
     /* ── Results panel ── */
-    #results-panel {
-      display: none;
-      max-width: 900px;
-      margin: 0 auto;
-    }
-    #results-panel.visible {
-      display: block;
-    }
+    #results-panel { display: none; max-width: 900px; margin: 0 auto; }
+    #results-panel.visible { display: block; }
 
-    .results-header {
-      text-align: center;
-      margin-bottom: 36px;
-    }
-    .results-header h2 {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: #f8fafc;
-    }
-    .results-header p {
-      margin-top: 8px;
-      color: #64748b;
-      font-size: 0.9rem;
-    }
+    .results-header { text-align: center; margin-bottom: 36px; }
+    .results-header h2 { font-size: 1.7rem; font-weight: 700; color: #f8fafc; }
+    .results-header p  { margin-top: 8px; color: #64748b; font-size: 0.9rem; }
 
     .totals-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 40px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 20px; margin-bottom: 40px;
     }
     .total-card {
-      background: #1e293b;
-      border: 1px solid #2d3748;
-      border-radius: 14px;
-      padding: 28px;
-      text-align: center;
+      background: #1e293b; border: 1px solid #2d3748;
+      border-radius: 14px; padding: 28px; text-align: center;
     }
-    .total-card.winner {
-      border-color: #fbbf24;
-      background: #1c1a0f;
-    }
+    .total-card.winner { border-color: #fbbf24; background: #1c1a0f; }
     .total-card .model-tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      color: #64748b;
-      margin-bottom: 10px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 1.5px; text-transform: uppercase;
+      color: #64748b; margin-bottom: 10px;
     }
-    .total-card.winner .model-tag {
-      color: #fbbf24;
-    }
-    .total-card .vote-count {
-      font-size: 3.5rem;
-      font-weight: 800;
-      color: #f1f5f9;
-      line-height: 1;
-    }
-    .total-card .vote-label {
-      margin-top: 6px;
-      font-size: 0.85rem;
-      color: #64748b;
-    }
-    .total-card .pct {
-      margin-top: 12px;
-      font-size: 1rem;
-      font-weight: 600;
-      color: #94a3b8;
-    }
-    .total-card.winner .pct {
-      color: #fbbf24;
-    }
+    .total-card.winner .model-tag { color: #fbbf24; }
+    .total-card .vote-count { font-size: 3.5rem; font-weight: 800; color: #f1f5f9; line-height: 1; }
+    .total-card .vote-label { margin-top: 6px; font-size: 0.85rem; color: #64748b; }
+    .total-card .pct        { margin-top: 12px; font-size: 1rem; font-weight: 600; color: #94a3b8; }
+    .total-card.winner .pct { color: #fbbf24; }
     .winner-badge {
-      display: inline-block;
-      margin-top: 10px;
+      display: inline-block; margin-top: 10px;
       padding: 3px 10px;
-      background: #fbbf24;
-      color: #1c1a0f;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      background: #fbbf24; color: #1c1a0f;
+      font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
       border-radius: 20px;
     }
 
     .detail-table-wrap {
-      background: #1e293b;
-      border: 1px solid #2d3748;
-      border-radius: 14px;
-      overflow: hidden;
+      background: #1e293b; border: 1px solid #2d3748;
+      border-radius: 14px; overflow: hidden;
     }
     .detail-table-wrap h3 {
       padding: 18px 24px 14px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: #94a3b8;
-      letter-spacing: 0.5px;
+      font-size: 0.85rem; font-weight: 600;
+      color: #94a3b8; letter-spacing: 0.5px;
       border-bottom: 1px solid #2d3748;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    table { width: 100%; border-collapse: collapse; }
     th {
       padding: 10px 16px;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: #64748b;
-      text-align: left;
-      background: #161e2e;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase;
+      color: #64748b; text-align: left; background: #161e2e;
     }
     td {
-      padding: 12px 16px;
-      font-size: 0.85rem;
-      color: #cbd5e1;
-      border-top: 1px solid #1e293b;
+      padding: 12px 16px; font-size: 0.85rem;
+      color: #cbd5e1; border-top: 1px solid #1e293b;
     }
-    tr:nth-child(even) td {
-      background: #161e2e22;
-    }
+    tr:nth-child(even) td { background: #161e2e22; }
     .chosen-model {
-      display: inline-block;
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
+      display: inline-block; padding: 2px 10px;
+      border-radius: 20px; font-size: 0.75rem; font-weight: 600;
     }
-    .chosen-model.s2-pro {
-      background: #1d4ed820;
-      color: #60a5fa;
-      border: 1px solid #1d4ed840;
-    }
-    .chosen-model.s1 {
-      background: #7c3aed20;
-      color: #a78bfa;
-      border: 1px solid #7c3aed40;
-    }
+    .chosen-model.s2-pro { background:#1d4ed820; color:#60a5fa; border:1px solid #1d4ed840; }
+    .chosen-model.s1     { background:#7c3aed20; color:#a78bfa; border:1px solid #7c3aed40; }
 
     @media (max-width: 600px) {
       .samples-row { grid-template-columns: 1fr; }
       .totals-row  { grid-template-columns: 1fr; }
       header h1    { font-size: 1.4rem; }
+      .name-box    { flex-direction: column; align-items: stretch; }
     }
   </style>
 </head>
@@ -401,6 +300,12 @@
     <span class="badge">DOUBLE-BLIND &nbsp;·&nbsp; 20 VOICES</span>
   </header>
 
+  <!-- Participant name -->
+  <div class="name-box">
+    <label for="participant-name">Your name</label>
+    <input type="text" id="participant-name" placeholder="Enter your name before voting…" autocomplete="off" />
+  </div>
+
   <div class="progress-bar-wrap">
     <div class="progress-bar-bg">
       <div class="progress-bar-fill" id="progress-fill"></div>
@@ -412,9 +317,10 @@
 
   <div class="submit-wrap">
     <button class="submit-btn" id="submit-btn" disabled>
-      Reveal Results
+      <span class="spinner"></span>
+      <span id="btn-label">Reveal Results</span>
     </button>
-    <p class="submit-note" id="submit-note">Vote for all 20 voices to reveal the results.</p>
+    <p class="submit-note" id="submit-note">Enter your name and vote for all 20 voices to reveal results.</p>
   </div>
 </div>
 
@@ -424,29 +330,27 @@
 <div id="results-panel">
   <div class="results-header">
     <h2>Your Results</h2>
-    <p>Here's how you voted, mapped to the actual models.</p>
+    <p id="results-subheading">Here's how you voted, mapped to the actual models.</p>
   </div>
-
   <div class="totals-row" id="totals-row"></div>
-
   <div class="detail-table-wrap">
     <h3>Vote breakdown by voice</h3>
     <table>
       <thead>
-        <tr>
-          <th>#</th>
-          <th>Voice</th>
-          <th>You chose</th>
-          <th>Model</th>
-        </tr>
+        <tr><th>#</th><th>Voice</th><th>You chose</th><th>Model</th></tr>
       </thead>
       <tbody id="detail-tbody"></tbody>
     </table>
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-// ── Mapping data (embedded from blind_test_mapping.json) ──────────────────────
+// ── CONFIG — paste your Apps Script Web App URL here ─────────────────────────
+const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// ── Mapping data ──────────────────────────────────────────────────────────────
 const MAPPING = {
   "adrian":              { voice_name: "Adrian",              sample_1: "s2-pro", sample_2: "s1" },
   "laura":               { voice_name: "Laura",               sample_1: "s2-pro", sample_2: "s1" },
@@ -470,121 +374,151 @@ const MAPPING = {
   "ronaldo1":            { voice_name: "Ronaldo1",            sample_1: "s1",     sample_2: "s2-pro" },
 };
 
-const voices   = Object.keys(MAPPING);
-const total    = voices.length;
-const votes    = {};          // key → 'sample_1' | 'sample_2'
+const voices = Object.keys(MAPPING);
+const total  = voices.length;
+const votes  = {};
 
-// ── Build the grid ────────────────────────────────────────────────────────────
+// ── Build grid ────────────────────────────────────────────────────────────────
 const grid = document.getElementById('voice-grid');
-
 voices.forEach((key, idx) => {
-  const info  = MAPPING[key];
-  const file1 = `${key}_sample_1.wav`;
-  const file2 = `${key}_sample_2.wav`;
-
+  const info = MAPPING[key];
   const card = document.createElement('div');
   card.className = 'voice-card';
   card.id = `card-${key}`;
-
   card.innerHTML = `
     <div class="voice-header">
       <div class="voice-number">${idx + 1}</div>
-      <div class="voice-info">
-        <h2>${info.voice_name}</h2>
-      </div>
+      <div class="voice-info"><h2>${info.voice_name}</h2></div>
     </div>
     <div class="samples-row">
-      <div class="sample-block" id="block-${key}-1" onclick="castVote('${key}', 'sample_1')">
+      <div class="sample-block" id="block-${key}-1" onclick="castVote('${key}','sample_1')">
         <div class="sample-label">Sample A</div>
         <audio controls preload="none" onclick="event.stopPropagation()">
-          <source src="${file1}" type="audio/wav" />
+          <source src="${key}_sample_1.wav" type="audio/wav"/>
         </audio>
         <div class="vote-indicator">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           My vote
         </div>
       </div>
-      <div class="sample-block" id="block-${key}-2" onclick="castVote('${key}', 'sample_2')">
+      <div class="sample-block" id="block-${key}-2" onclick="castVote('${key}','sample_2')">
         <div class="sample-label">Sample B</div>
         <audio controls preload="none" onclick="event.stopPropagation()">
-          <source src="${file2}" type="audio/wav" />
+          <source src="${key}_sample_2.wav" type="audio/wav"/>
         </audio>
         <div class="vote-indicator">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="20 6 9 17 4 12"/>
-          </svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
           My vote
         </div>
       </div>
-    </div>
-  `;
-
+    </div>`;
   grid.appendChild(card);
 });
 
 // ── Vote handler ──────────────────────────────────────────────────────────────
 function castVote(key, sample) {
-  const prev = votes[key];
   votes[key] = sample;
-
-  // Update card highlight
   document.getElementById(`card-${key}`).classList.add('voted');
-
-  // Update block selection state
-  for (const s of ['sample_1', 'sample_2']) {
+  ['sample_1','sample_2'].forEach(s => {
     const n = s === 'sample_1' ? 1 : 2;
-    const block = document.getElementById(`block-${key}-${n}`);
-    if (s === sample) {
-      block.classList.add('selected');
-    } else {
-      block.classList.remove('selected');
-    }
-  }
+    document.getElementById(`block-${key}-${n}`).classList.toggle('selected', s === sample);
+  });
+  updateProgress();
+}
 
-  // Update progress
+function updateProgress() {
   const voted = Object.keys(votes).length;
   const pct   = (voted / total) * 100;
   document.getElementById('progress-fill').style.width = pct + '%';
   document.getElementById('progress-text').textContent  = `${voted} / ${total} voted`;
+  checkReady();
+}
 
-  // Enable submit when all voted
-  const btn  = document.getElementById('submit-btn');
-  const note = document.getElementById('submit-note');
-  if (voted === total) {
-    btn.disabled      = false;
-    note.textContent  = 'All voices voted — click to reveal the model results!';
+const nameInput = document.getElementById('participant-name');
+nameInput.addEventListener('input', checkReady);
+
+function checkReady() {
+  const allVoted = Object.keys(votes).length === total;
+  const hasName  = nameInput.value.trim().length > 0;
+  const btn      = document.getElementById('submit-btn');
+  const note     = document.getElementById('submit-note');
+  btn.disabled   = !(allVoted && hasName);
+  if (allVoted && !hasName) {
+    note.textContent = 'Please enter your name above to reveal results.';
+  } else if (!allVoted && hasName) {
+    note.textContent = `Vote for all ${total} voices to reveal the results.`;
+  } else if (allVoted && hasName) {
+    note.textContent = 'All done — click to submit and reveal the model results!';
+  } else {
+    note.textContent = `Enter your name and vote for all ${total} voices to reveal results.`;
   }
 }
 
-// ── Submit & reveal ───────────────────────────────────────────────────────────
-document.getElementById('submit-btn').addEventListener('click', () => {
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ── Submit ────────────────────────────────────────────────────────────────────
+document.getElementById('submit-btn').addEventListener('click', async () => {
   if (Object.keys(votes).length < total) return;
+  const participant = nameInput.value.trim();
+  if (!participant) return;
 
   // Tally
-  let s2pro = 0, s1 = 0;
-  const rows = [];
+  let s2pro = 0, s1count = 0;
+  const rows     = [];
+  const voteData = {};
 
   voices.forEach((key, idx) => {
     const info        = MAPPING[key];
-    const choice      = votes[key];               // 'sample_1' | 'sample_2'
-    const chosenModel = info[choice];             // 's2-pro' | 's1'
+    const choice      = votes[key];
+    const chosenModel = info[choice];
     const sampleLabel = choice === 'sample_1' ? 'Sample A' : 'Sample B';
-
-    if (chosenModel === 's2-pro') s2pro++;
-    else s1++;
-
+    if (chosenModel === 's2-pro') s2pro++; else s1count++;
+    voteData[key] = chosenModel;
     rows.push({ idx: idx + 1, voice_name: info.voice_name, sampleLabel, chosenModel });
   });
 
-  // ── Totals ────────────────────────────────────────────────────────────────
-  const pctS2pro = Math.round((s2pro / total) * 100);
-  const pctS1    = Math.round((s1    / total) * 100);
-  const s2Winner = s2pro >= s1;
+  // Show loading
+  const btn = document.getElementById('submit-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+  document.getElementById('btn-label').textContent = 'Submitting…';
 
-  const totalsRow = document.getElementById('totals-row');
-  totalsRow.innerHTML = `
+  // POST to Apps Script
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method : 'POST',
+      mode   : 'no-cors',         // Apps Script requires no-cors
+      headers: { 'Content-Type': 'application/json' },
+      body   : JSON.stringify({
+        participant,
+        timestamp : new Date().toISOString(),
+        votes     : voteData,
+        totals    : { s2_pro: s2pro, s1: s1count },
+      }),
+    });
+  } catch (err) {
+    // no-cors swallows network errors too; log but don't block results
+    console.warn('Submission error (non-fatal):', err);
+    showToast('Could not save to sheet — showing results anyway.');
+  }
+
+  btn.classList.remove('loading');
+
+  // Render results
+  const pctS2pro = Math.round((s2pro  / total) * 100);
+  const pctS1    = Math.round((s1count / total) * 100);
+  const s2Winner = s2pro >= s1count;
+
+  document.getElementById('results-subheading').textContent =
+    `Results for ${participant} — mapped to the actual models.`;
+
+  document.getElementById('totals-row').innerHTML = `
     <div class="total-card ${s2Winner ? 'winner' : ''}">
       <div class="model-tag">S2-PRO Model</div>
       <div class="vote-count">${s2pro}</div>
@@ -594,25 +528,20 @@ document.getElementById('submit-btn').addEventListener('click', () => {
     </div>
     <div class="total-card ${!s2Winner ? 'winner' : ''}">
       <div class="model-tag">S1 Model</div>
-      <div class="vote-count">${s1}</div>
+      <div class="vote-count">${s1count}</div>
       <div class="vote-label">votes</div>
       <div class="pct">${pctS1}% preferred</div>
       ${!s2Winner ? '<span class="winner-badge">&#9733; Winner</span>' : ''}
-    </div>
-  `;
+    </div>`;
 
-  // ── Detail table ──────────────────────────────────────────────────────────
-  const tbody = document.getElementById('detail-tbody');
-  tbody.innerHTML = rows.map(r => `
+  document.getElementById('detail-tbody').innerHTML = rows.map(r => `
     <tr>
       <td>${r.idx}</td>
       <td>${r.voice_name}</td>
       <td>${r.sampleLabel}</td>
       <td><span class="chosen-model ${r.chosenModel === 's2-pro' ? 's2-pro' : 's1'}">${r.chosenModel === 's2-pro' ? 'S2-PRO' : 'S1'}</span></td>
-    </tr>
-  `).join('');
+    </tr>`).join('');
 
-  // ── Swap sections ─────────────────────────────────────────────────────────
   document.getElementById('voting-section').style.display = 'none';
   const panel = document.getElementById('results-panel');
   panel.classList.add('visible');
