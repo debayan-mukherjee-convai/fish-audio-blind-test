@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fish Audio — Blind Model Test</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0f1117;
+      color: #e2e8f0;
+      min-height: 100vh;
+      padding: 40px 16px 80px;
+    }
+
+    header {
+      max-width: 900px;
+      margin: 0 auto 40px;
+      text-align: center;
+    }
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #f8fafc;
+      letter-spacing: -0.5px;
+    }
+    header p {
+      margin-top: 10px;
+      color: #94a3b8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .badge {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 4px 12px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      color: #64748b;
+      letter-spacing: 0.5px;
+    }
+
+    .voice-grid {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .voice-card {
+      background: #1e293b;
+      border: 1px solid #2d3748;
+      border-radius: 14px;
+      padding: 22px 24px;
+      transition: border-color 0.2s;
+    }
+    .voice-card.voted {
+      border-color: #3b82f6;
+    }
+
+    .voice-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    .voice-number {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #334155;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .voice-info h2 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #f1f5f9;
+    }
+    .voice-text {
+      margin-top: 4px;
+      font-size: 0.82rem;
+      color: #64748b;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    .samples-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .sample-block {
+      background: #0f1117;
+      border: 2px solid #2d3748;
+      border-radius: 10px;
+      padding: 16px;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+      position: relative;
+    }
+    .sample-block:hover {
+      border-color: #475569;
+      background: #131a26;
+    }
+    .sample-block.selected {
+      border-color: #3b82f6;
+      background: #0f1e3a;
+    }
+
+    .sample-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    .sample-block.selected .sample-label {
+      color: #60a5fa;
+    }
+
+    audio {
+      width: 100%;
+      height: 36px;
+      outline: none;
+      border-radius: 6px;
+    }
+    /* Webkit audio player dark tint */
+    audio::-webkit-media-controls-panel {
+      background-color: #1e293b;
+    }
+
+    .vote-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 10px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #3b82f6;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .sample-block.selected .vote-indicator {
+      opacity: 1;
+    }
+    .vote-indicator svg {
+      flex-shrink: 0;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #475569;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      align-self: center;
+      grid-column: auto;
+    }
+
+    /* override grid for OR divider */
+    .samples-row {
+      position: relative;
+    }
+
+    .progress-bar-wrap {
+      max-width: 900px;
+      margin: 0 auto 28px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .progress-bar-bg {
+      flex: 1;
+      height: 6px;
+      background: #1e293b;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #3b82f6, #818cf8);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+    .progress-text {
+      font-size: 0.8rem;
+      color: #64748b;
+      white-space: nowrap;
+    }
+
+    .submit-wrap {
+      max-width: 900px;
+      margin: 32px auto 0;
+      text-align: center;
+    }
+    .submit-btn {
+      padding: 14px 48px;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      letter-spacing: 0.2px;
+    }
+    .submit-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    .submit-btn:not(:disabled):hover {
+      opacity: 0.9;
+    }
+    .submit-btn:not(:disabled):active {
+      transform: scale(0.98);
+    }
+    .submit-note {
+      margin-top: 10px;
+      font-size: 0.8rem;
+      color: #475569;
+    }
+
+    /* ── Results panel ── */
+    #results-panel {
+      display: none;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    #results-panel.visible {
+      display: block;
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .results-header h2 {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .results-header p {
+      margin-top: 8px;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+
+    .totals-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    .total-card {
+      background: #1e293b;
+      border: 1px solid #2d3748;
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+    }
+    .total-card.winner {
+      border-color: #fbbf24;
+      background: #1c1a0f;
+    }
+    .total-card .model-tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #64748b;
+      margin-bottom: 10px;
+    }
+    .total-card.winner .model-tag {
+      color: #fbbf24;
+    }
+    .total-card .vote-count {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #f1f5f9;
+      line-height: 1;
+    }
+    .total-card .vote-label {
+      margin-top: 6px;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+    .total-card .pct {
+      margin-top: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #94a3b8;
+    }
+    .total-card.winner .pct {
+      color: #fbbf24;
+    }
+    .winner-badge {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 3px 10px;
+      background: #fbbf24;
+      color: #1c1a0f;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 20px;
+    }
+
+    .detail-table-wrap {
+      background: #1e293b;
+      border: 1px solid #2d3748;
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .detail-table-wrap h3 {
+      padding: 18px 24px 14px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: #94a3b8;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid #2d3748;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th {
+      padding: 10px 16px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #64748b;
+      text-align: left;
+      background: #161e2e;
+    }
+    td {
+      padding: 12px 16px;
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      border-top: 1px solid #1e293b;
+    }
+    tr:nth-child(even) td {
+      background: #161e2e22;
+    }
+    .chosen-model {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .chosen-model.s2-pro {
+      background: #1d4ed820;
+      color: #60a5fa;
+      border: 1px solid #1d4ed840;
+    }
+    .chosen-model.s1 {
+      background: #7c3aed20;
+      color: #a78bfa;
+      border: 1px solid #7c3aed40;
+    }
+
+    @media (max-width: 600px) {
+      .samples-row { grid-template-columns: 1fr; }
+      .totals-row  { grid-template-columns: 1fr; }
+      header h1    { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     VOTING SECTION
+════════════════════════════════════════════════ -->
+<div id="voting-section">
+  <header>
+    <h1>Fish Audio — Blind Model Comparison</h1>
+    <p>Listen to both audio samples for each voice, then vote for the one that sounds better to you. Model names are revealed only after you submit.</p>
+    <span class="badge">DOUBLE-BLIND &nbsp;·&nbsp; 20 VOICES</span>
+  </header>
+
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-bg">
+      <div class="progress-bar-fill" id="progress-fill"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0 / 20 voted</div>
+  </div>
+
+  <div class="voice-grid" id="voice-grid"></div>
+
+  <div class="submit-wrap">
+    <button class="submit-btn" id="submit-btn" disabled>
+      Reveal Results
+    </button>
+    <p class="submit-note" id="submit-note">Vote for all 20 voices to reveal the results.</p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════
+     RESULTS SECTION
+════════════════════════════════════════════════ -->
+<div id="results-panel">
+  <div class="results-header">
+    <h2>Your Results</h2>
+    <p>Here's how you voted, mapped to the actual models.</p>
+  </div>
+
+  <div class="totals-row" id="totals-row"></div>
+
+  <div class="detail-table-wrap">
+    <h3>Vote breakdown by voice</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Voice</th>
+          <th>You chose</th>
+          <th>Model</th>
+        </tr>
+      </thead>
+      <tbody id="detail-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+// ── Mapping data (embedded from blind_test_mapping.json) ──────────────────────
+const MAPPING = {
+  "adrian":              { voice_name: "Adrian",              sample_1: "s2-pro", sample_2: "s1" },
+  "laura":               { voice_name: "Laura",               sample_1: "s2-pro", sample_2: "s1" },
+  "ethan":               { voice_name: "Ethan",               sample_1: "s1",     sample_2: "s2-pro" },
+  "selene":              { voice_name: "Selene",              sample_1: "s2-pro", sample_2: "s1" },
+  "book_record_regular": { voice_name: "Book Record Regular", sample_1: "s2-pro", sample_2: "s1" },
+  "narrator":            { voice_name: "Narrator",            sample_1: "s2-pro", sample_2: "s1" },
+  "sleepless_historian": { voice_name: "Sleepless Historian", sample_1: "s2-pro", sample_2: "s1" },
+  "paula":               { voice_name: "Paula",               sample_1: "s2-pro", sample_2: "s1" },
+  "sarah":               { voice_name: "Sarah",               sample_1: "s1",     sample_2: "s2-pro" },
+  "horror":              { voice_name: "Horror",              sample_1: "s2-pro", sample_2: "s1" },
+  "raiden_shogun":       { voice_name: "Raiden Shogun",       sample_1: "s2-pro", sample_2: "s1" },
+  "voice_dl":            { voice_name: "Voice DL",            sample_1: "s2-pro", sample_2: "s1" },
+  "alhaitham":           { voice_name: "Alhaitham",           sample_1: "s2-pro", sample_2: "s1" },
+  "valentino":           { voice_name: "Valentino",           sample_1: "s2-pro", sample_2: "s1" },
+  "marcus_the_worm":     { voice_name: "Marcus the Worm",     sample_1: "s2-pro", sample_2: "s1" },
+  "dexter_morgan":       { voice_name: "Dexter Morgan",       sample_1: "s2-pro", sample_2: "s1" },
+  "phat_phapbro":        { voice_name: "Phat Phap (Bro)",     sample_1: "s1",     sample_2: "s2-pro" },
+  "taylor_swift":        { voice_name: "Taylor Swift",        sample_1: "s2-pro", sample_2: "s1" },
+  "ton":                 { voice_name: "Ton",                 sample_1: "s1",     sample_2: "s2-pro" },
+  "ronaldo1":            { voice_name: "Ronaldo1",            sample_1: "s1",     sample_2: "s2-pro" },
+};
+
+const voices   = Object.keys(MAPPING);
+const total    = voices.length;
+const votes    = {};          // key → 'sample_1' | 'sample_2'
+
+// ── Build the grid ────────────────────────────────────────────────────────────
+const grid = document.getElementById('voice-grid');
+
+voices.forEach((key, idx) => {
+  const info  = MAPPING[key];
+  const file1 = `${key}_sample_1.wav`;
+  const file2 = `${key}_sample_2.wav`;
+
+  const card = document.createElement('div');
+  card.className = 'voice-card';
+  card.id = `card-${key}`;
+
+  card.innerHTML = `
+    <div class="voice-header">
+      <div class="voice-number">${idx + 1}</div>
+      <div class="voice-info">
+        <h2>${info.voice_name}</h2>
+      </div>
+    </div>
+    <div class="samples-row">
+      <div class="sample-block" id="block-${key}-1" onclick="castVote('${key}', 'sample_1')">
+        <div class="sample-label">Sample A</div>
+        <audio controls preload="none" onclick="event.stopPropagation()">
+          <source src="${file1}" type="audio/wav" />
+        </audio>
+        <div class="vote-indicator">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          My vote
+        </div>
+      </div>
+      <div class="sample-block" id="block-${key}-2" onclick="castVote('${key}', 'sample_2')">
+        <div class="sample-label">Sample B</div>
+        <audio controls preload="none" onclick="event.stopPropagation()">
+          <source src="${file2}" type="audio/wav" />
+        </audio>
+        <div class="vote-indicator">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"/>
+          </svg>
+          My vote
+        </div>
+      </div>
+    </div>
+  `;
+
+  grid.appendChild(card);
+});
+
+// ── Vote handler ──────────────────────────────────────────────────────────────
+function castVote(key, sample) {
+  const prev = votes[key];
+  votes[key] = sample;
+
+  // Update card highlight
+  document.getElementById(`card-${key}`).classList.add('voted');
+
+  // Update block selection state
+  for (const s of ['sample_1', 'sample_2']) {
+    const n = s === 'sample_1' ? 1 : 2;
+    const block = document.getElementById(`block-${key}-${n}`);
+    if (s === sample) {
+      block.classList.add('selected');
+    } else {
+      block.classList.remove('selected');
+    }
+  }
+
+  // Update progress
+  const voted = Object.keys(votes).length;
+  const pct   = (voted / total) * 100;
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent  = `${voted} / ${total} voted`;
+
+  // Enable submit when all voted
+  const btn  = document.getElementById('submit-btn');
+  const note = document.getElementById('submit-note');
+  if (voted === total) {
+    btn.disabled      = false;
+    note.textContent  = 'All voices voted — click to reveal the model results!';
+  }
+}
+
+// ── Submit & reveal ───────────────────────────────────────────────────────────
+document.getElementById('submit-btn').addEventListener('click', () => {
+  if (Object.keys(votes).length < total) return;
+
+  // Tally
+  let s2pro = 0, s1 = 0;
+  const rows = [];
+
+  voices.forEach((key, idx) => {
+    const info        = MAPPING[key];
+    const choice      = votes[key];               // 'sample_1' | 'sample_2'
+    const chosenModel = info[choice];             // 's2-pro' | 's1'
+    const sampleLabel = choice === 'sample_1' ? 'Sample A' : 'Sample B';
+
+    if (chosenModel === 's2-pro') s2pro++;
+    else s1++;
+
+    rows.push({ idx: idx + 1, voice_name: info.voice_name, sampleLabel, chosenModel });
+  });
+
+  // ── Totals ────────────────────────────────────────────────────────────────
+  const pctS2pro = Math.round((s2pro / total) * 100);
+  const pctS1    = Math.round((s1    / total) * 100);
+  const s2Winner = s2pro >= s1;
+
+  const totalsRow = document.getElementById('totals-row');
+  totalsRow.innerHTML = `
+    <div class="total-card ${s2Winner ? 'winner' : ''}">
+      <div class="model-tag">S2-PRO Model</div>
+      <div class="vote-count">${s2pro}</div>
+      <div class="vote-label">votes</div>
+      <div class="pct">${pctS2pro}% preferred</div>
+      ${s2Winner ? '<span class="winner-badge">&#9733; Winner</span>' : ''}
+    </div>
+    <div class="total-card ${!s2Winner ? 'winner' : ''}">
+      <div class="model-tag">S1 Model</div>
+      <div class="vote-count">${s1}</div>
+      <div class="vote-label">votes</div>
+      <div class="pct">${pctS1}% preferred</div>
+      ${!s2Winner ? '<span class="winner-badge">&#9733; Winner</span>' : ''}
+    </div>
+  `;
+
+  // ── Detail table ──────────────────────────────────────────────────────────
+  const tbody = document.getElementById('detail-tbody');
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td>${r.idx}</td>
+      <td>${r.voice_name}</td>
+      <td>${r.sampleLabel}</td>
+      <td><span class="chosen-model ${r.chosenModel === 's2-pro' ? 's2-pro' : 's1'}">${r.chosenModel === 's2-pro' ? 'S2-PRO' : 'S1'}</span></td>
+    </tr>
+  `).join('');
+
+  // ── Swap sections ─────────────────────────────────────────────────────────
+  document.getElementById('voting-section').style.display = 'none';
+  const panel = document.getElementById('results-panel');
+  panel.classList.add('visible');
+  panel.scrollIntoView({ behavior: 'smooth' });
+});
+</script>
+</body>
+</html>
